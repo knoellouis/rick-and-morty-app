@@ -2,14 +2,17 @@ import { createCharacterCard } from "./components/CharacterCard/CharacterCard.js
 // api
 
 const cardContainer = document.querySelector('[data-js="card-container"]');
+const searchForm = document.querySelector('[data-js="search-bar"]');
 const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]',
 );
 const searchBar = document.querySelector('[data-js="search-bar"]');
+// const searchBarInput = document.querySelector('[data-js="search-bar-input"]');
 const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
+
 // States
 let maxPage = 1;
 let currentPage = 1;
@@ -40,6 +43,7 @@ async function fetchCharacters(page) {
   }
 }
 
+// Next Button
 nextButton.addEventListener("click", () => {
   if (currentPage >= 1) {
     currentPage = currentPage + 1;
@@ -47,6 +51,7 @@ nextButton.addEventListener("click", () => {
   }
 });
 
+//Prev Button
 prevButton.addEventListener("click", () => {
   if (currentPage > 1) {
     currentPage = currentPage - 1;
@@ -54,4 +59,13 @@ prevButton.addEventListener("click", () => {
   }
 });
 
+// Fetch and Render Characters
 fetchCharacters(currentPage);
+
+// Search bar
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData);
+  searchQuery = data.query;
+});
