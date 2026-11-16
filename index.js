@@ -10,10 +10,9 @@ const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
-
 // States
 let maxPage = 1;
-let page = 1;
+let currentPage = 1;
 let searchQuery = "";
 
 // Card
@@ -27,7 +26,8 @@ async function fetchCharacters(page) {
     cardContainer.append(createCharacterCard(result));
   });
   maxPage = data.info.pages;
+  pagination.textContent = `${page}/${maxPage}`;
   return data;
 }
 
-fetchCharacters();
+fetchCharacters(currentPage);
