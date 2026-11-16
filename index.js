@@ -14,12 +14,14 @@ const pagination = document.querySelector('[data-js="pagination"]');
 let maxPage = 1;
 let currentPage = 1;
 let searchQuery = "";
-let buttonEnabled = true;
+let isLoading = false;
 
 // Card
 async function fetchCharacters(page) {
+  isLoading = true;
+  nextButton.disabled = true;
+  prevButton.disabled = true;
   try {
-    buttonEnabled = false;
     const response = await fetch(
       `https://rickandmortyapi.com/api/character?page=${page}`,
     );
@@ -32,25 +34,22 @@ async function fetchCharacters(page) {
     pagination.textContent = `${page}/${maxPage}`;
     return data;
   } finally {
-    buttonEnabled = true;
+    isLoading = false;
+    nextButton.disabled = false;
+    prevButton.disabled = false;
   }
 }
 
 nextButton.addEventListener("click", () => {
-  if (!buttonEnabled) return;
-  console.log(buttonEnabled);
   if (currentPage >= 1) {
     currentPage = currentPage + 1;
-    buttonEnabled = false;
     fetchCharacters(currentPage);
   }
 });
 
 prevButton.addEventListener("click", () => {
-  if (!buttonEnabled) return;
   if (currentPage > 1) {
     currentPage = currentPage - 1;
-    buttonEnabled = false;
     fetchCharacters(currentPage);
   }
 });
