@@ -1,21 +1,49 @@
 import { createCharacterCard } from "./components/CharacterCard/CharacterCard.js";
+import { createButton } from "./components/NavButton/NavButton.js";
+import { createSearchBar } from "./components/SearchBar/SearchBar.js";
+import { createNavPagination } from "./components/NavPagination/NavPagination.js";
 // api
 
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]',
 );
-const searchBar = document.querySelector('[data-js="search-bar"]');
 const navigation = document.querySelector('[data-js="navigation"]');
-const prevButton = document.querySelector('[data-js="button-prev"]');
-const nextButton = document.querySelector('[data-js="button-next"]');
-const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
 let maxPage = 1;
 let currentPage = 1;
 let searchQuery = "";
 let isLoading = false;
+
+// Prev Button
+const prevButton = createButton("prev", "previous", () => {
+  if (currentPage > 1 && !isLoading) {
+    currentPage = currentPage - 1;
+    fetchCharacters(currentPage);
+  }
+});
+
+// Next Button
+const nextButton = createButton("next", "next", () => {
+  if (currentPage < maxPage && !isLoading) {
+    currentPage = currentPage + 1;
+    fetchCharacters(currentPage);
+  }
+});
+
+// Search Bar
+const searchBar = createSearchBar(searchQuery, currentPage, (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData);
+  searchQuery = data.query;
+  currentPage = 1;
+  fetchCharacters(currentPage);
+});
+
+// Pagination
+const pagination = createNavPagination(currentPage, maxPage);
 
 // Card
 async function fetchCharacters(page) {
@@ -28,6 +56,12 @@ async function fetchCharacters(page) {
     );
     const data = await response.json();
     cardContainer.innerHTML = "";
+    if (!response.ok) {
+      maxPage = 1;
+      pagination.textContent = "0/0";
+      cardContainer.textContent = "No characters found.";
+      return;
+    }
     data.results.forEach((result) => {
       cardContainer.append(createCharacterCard(result));
     });
@@ -43,31 +77,8 @@ async function fetchCharacters(page) {
   }
 }
 
-// Next Button
-nextButton.addEventListener("click", () => {
-  if (currentPage < maxPage) {
-    currentPage = currentPage + 1;
-    fetchCharacters(currentPage);
-  }
-});
-
-//Prev Button
-prevButton.addEventListener("click", () => {
-  if (currentPage > 1 && currentPage > 0) {
-    currentPage = currentPage - 1;
-    fetchCharacters(currentPage);
-  }
-});
+searchBarContainer.append(searchBar);
+navigation.append(prevButton, pagination, nextButton);
 
 // Fetch and Render Characters
 fetchCharacters(currentPage);
-
-// Search bar
-searchBar.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const data = Object.fromEntries(formData);
-  searchQuery = data.query;
-  currentPage = 1;
-  fetchCharacters(currentPage);
-});
