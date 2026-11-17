@@ -18,21 +18,28 @@ let isLoading = false;
 
 // Prev Button
 const prevButton = createButton("prev", "previous", () => {
-  if (currentPage > 1 && !isLoading) {
-    currentPage = currentPage - 1;
-    fetchCharacters(currentPage);
-  }
+  goToPage(-1);
 });
+
 prevButton.disabled = true;
 
 // Next Button
 const nextButton = createButton("next", "next", () => {
-  if (currentPage < maxPage && !isLoading) {
-    currentPage = currentPage + 1;
+  goToPage(1);
+});
+
+nextButton.disabled = true;
+
+function goToPage(step) {
+  if (isLoading) return;
+
+  const newPage = currentPage + step;
+
+  if (newPage >= 1 && newPage <= maxPage) {
+    currentPage = newPage;
     fetchCharacters(currentPage);
   }
-});
-nextButton.disabled = true;
+}
 
 // Search Bar
 const searchBar = createSearchBar(searchQuery, currentPage, (event) => {
