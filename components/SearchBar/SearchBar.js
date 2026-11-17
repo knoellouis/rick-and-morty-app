@@ -10,6 +10,7 @@ export function createSearchBar(query, page, onSubmit) {
   input.type = "text";
   input.placeholder = "search characters";
   input.setAttribute("aria-label", "character name");
+  input.value = query;
 
   const button = document.createElement("button");
   button.classList.add("search-bar__button");
@@ -22,7 +23,6 @@ export function createSearchBar(query, page, onSubmit) {
 
   button.append(icon);
   form.append(input, button);
-
   form.addEventListener("submit", onSubmit);
   return form;
 }
