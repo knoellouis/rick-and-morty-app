@@ -23,6 +23,7 @@ const prevButton = createButton("prev", "previous", () => {
     fetchCharacters(currentPage);
   }
 });
+prevButton.disabled = true;
 
 // Next Button
 const nextButton = createButton("next", "next", () => {
@@ -31,6 +32,7 @@ const nextButton = createButton("next", "next", () => {
     fetchCharacters(currentPage);
   }
 });
+nextButton.disabled = true;
 
 // Search Bar
 const searchBar = createSearchBar(searchQuery, currentPage, (event) => {
@@ -50,6 +52,7 @@ async function fetchCharacters(page) {
   isLoading = true;
   nextButton.disabled = true;
   prevButton.disabled = true;
+
   try {
     const response = await fetch(
       `https://rickandmortyapi.com/api/character?page=${page}&name=${searchQuery}`,
@@ -72,8 +75,8 @@ async function fetchCharacters(page) {
     console.error(error);
   } finally {
     isLoading = false;
-    nextButton.disabled = false;
-    prevButton.disabled = false;
+    nextButton.disabled = isLoading || currentPage >= maxPage;
+    prevButton.disabled = isLoading || currentPage <= 1;
   }
 }
 
