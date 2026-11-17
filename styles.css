@@ -81,8 +81,8 @@
 
   /* transitions */
 
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
 
   /* layout */
 
@@ -110,6 +110,8 @@ body {
   font-family: var(--font-primary);
   font-size: var(--font-size-base);
   line-height: 1.5;
+
+  /* tells the browser how to render text so that it looks smoother and less jagged */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -281,7 +283,7 @@ main {
   }
 }
 
-/* reduced motion */
+/* reduced motion: for people who find animations, moving elements, zoom effects or smooth scrolling uncomfortable */
 
 @media (prefers-reduced-motion: reduce) {
   *,
